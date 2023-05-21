@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "endr/endr_killicon"
+	"$translucent" 1
+	"$vertexcolor" 1
+} 

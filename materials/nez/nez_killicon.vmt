@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "nez/nez_killicon"
+	"$translucent" 1
+	"$vertexcolor" 1
+} 
