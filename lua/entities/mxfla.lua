@@ -10,6 +10,7 @@ util.PrecacheSound("maxsnd/jump.mp3")
 util.PrecacheSound("maxsnd/cover.mp3")
 util.PrecacheSound("maxsnd/stepitup.mp3")
 util.PrecacheSound("maxsnd/tooslow.mp3")
+util.PrecacheSound("maxsnd/scream.mp3")
 
 local IsValid = IsValid
 
@@ -535,7 +536,8 @@ end
 
 local tauntSounds = {
 	"maxsnd/tooslow.mp3",
-	"maxsnd/stepitup.mp3"
+	"maxsnd/stepitup.mp3",
+	"maxsnd/scream.mp3"
 }
 local ai_disabled = GetConVar("ai_disabled")
 --local timeAll = 0
