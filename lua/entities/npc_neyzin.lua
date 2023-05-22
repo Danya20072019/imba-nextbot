@@ -961,6 +961,6 @@ end
 list.Set("NPC", "npc_neyzin", {
 	Name = "Neyzin",
 	Class = "npc_neyzin",
-	Category = "Imba Nextbots",
+	Category = "Funny Nextbots",
 	AdminOnly = false
 })

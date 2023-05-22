@@ -16,7 +16,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local mxfla_acquire_distance = CreateConVar("mxfla_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local mxfla_acquire_distance = CreateConVar("mxfla_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which maxfla will chase a target.")
 
 local mxfla_spawn_protect = CreateConVar("mxfla_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -950,6 +950,6 @@ end
 list.Set("NPC", "mxfla", {
 	Name = "MaxFla",
 	Class = "mxfla",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })

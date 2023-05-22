@@ -16,7 +16,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local xiavier_acquire_distance = CreateConVar("xiavier_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local xiavier_acquire_distance = CreateConVar("xiavier_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which xiavier will chase a target.")
 
 local xiavier_spawn_protect = CreateConVar("xiavier_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -950,6 +950,6 @@ end
 list.Set("NPC", "xiavier", {
 	Name = "Xiavier",
 	Class = "xiavier",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })

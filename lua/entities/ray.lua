@@ -18,7 +18,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local ray_acquire_distance = CreateConVar("ray_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local ray_acquire_distance = CreateConVar("ray_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which ray will chase a target.")
 
 local ray_spawn_protect = CreateConVar("ray_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -953,6 +953,6 @@ end
 list.Set("NPC", "ray", {
 	Name = "RAY Cool Red Pedophile",
 	Class = "ray",
-	Category = "Imba Nextbots",
+	Category = "Funny Nextbots",
 	AdminOnly = false
 })

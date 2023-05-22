@@ -6,15 +6,18 @@ ENT.Base 			= "base_nextbot"
 ENT.PhysgunDisabled = true
 ENT.AutomaticFrameAdvance = false
 
-util.PrecacheSound("nez/jump.mp3")
+util.PrecacheSound("nez/jump1.mp3")
+util.PrecacheSound("nez/jump2.mp3")
 util.PrecacheSound("nez/panic.mp3")
-util.PrecacheSound("nez/pieceofcake.mp3")
+util.PrecacheSound("nez/kill1.mp3")
+util.PrecacheSound("nez/kill2.mp3")
+util.PrecacheSound("nez/kill3.mp3")
 
 local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local nez_acquire_distance = CreateConVar("nez_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local nez_acquire_distance = CreateConVar("nez_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which nez will chase a target.")
 
 local nez_spawn_protect = CreateConVar("nez_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -480,6 +483,12 @@ end
 function ENT:AttemptJumpAtTarget()
 	if (not self:IsOnGround()) then return end
 
+	local hrur = {
+		"nez/jump1.mp3",
+		"nez/jump2.mp3",
+		"nez/jump3.mp3"
+	}
+
 	local xyDistSqr = (self.CurrentTarget:GetPos() - self:GetPos()):Length2DSqr()
 	local zDifference = self.CurrentTarget:GetPos().z - self:GetPos().z
 	local maxAttackDistance = nez_attack_distance:GetInt()
@@ -490,7 +499,7 @@ function ENT:AttemptJumpAtTarget()
 		self.loco:Jump()
 		self.loco:SetJumpHeight(300)
 
-		self:EmitSound((jumpHeight > 500 and "nez/jump.mp3" or "nez/jump.mp3"), 350, 100)
+		self:EmitSound((jumpHeight > 500 and table.Random(hrur) or table.Random(hrur)), 350, 100)
 	end
 end
 
@@ -533,7 +542,10 @@ function ENT:BehaveStart()
 end
 
 local tauntSounds = {
-	"nez/pieceofcake.mp3"
+	"nez/kill1.mp3",
+	"nez/kill2.mp3",
+	"nez/kill3.mp3",
+	"nez/kill4.mp3"
 }
 local ai_disabled = GetConVar("ai_disabled")
 --local timeAll = 0
@@ -946,6 +958,6 @@ end
 list.Set("NPC", "nez", {
 	Name = "neznakomov",
 	Class = "nez",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })

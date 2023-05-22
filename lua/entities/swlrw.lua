@@ -14,7 +14,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local swlrw_acquire_distance = CreateConVar("swlrw_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local swlrw_acquire_distance = CreateConVar("swlrw_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which swlrw will chase a target.")
 
 local swlrw_spawn_protect = CreateConVar("swlrw_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -946,6 +946,6 @@ end
 list.Set("NPC", "swlrw", {
 	Name = "swlrw",
 	Class = "swlrw",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })

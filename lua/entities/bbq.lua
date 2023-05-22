@@ -14,7 +14,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local bbq_acquire_distance = CreateConVar("bbq_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local bbq_acquire_distance = CreateConVar("bbq_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which bbq will chase a target.")
 
 local bbq_spawn_protect = CreateConVar("bbq_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -946,6 +946,6 @@ end
 list.Set("NPC", "bbq", {
 	Name = "BBQ",
 	Class = "bbq",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })

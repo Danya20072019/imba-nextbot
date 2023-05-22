@@ -6,74 +6,61 @@ ENT.Base 			= "base_nextbot"
 ENT.PhysgunDisabled = true
 ENT.AutomaticFrameAdvance = false
 
-util.PrecacheSound("dtwo/jump.mp3")
-util.PrecacheSound("dtwo/jump2.mp3")
-util.PrecacheSound("dtwo/jump3.mp3")
-util.PrecacheSound("dtwo/jump4.mp3")
-util.PrecacheSound("dtwo/jump5.mp3")
-util.PrecacheSound("dtwo/jump6.mp3")
-util.PrecacheSound("dtwo/jump7.mp3")
-util.PrecacheSound("dtwo/panic.mp3")
-util.PrecacheSound("dtwo/kill1.mp3")
-util.PrecacheSound("dtwo/kill2.mp3")
-util.PrecacheSound("dtwo/kill3.mp3")
-util.PrecacheSound("dtwo/kill4.mp3")
-util.PrecacheSound("dtwo/kill5.mp3")
-util.PrecacheSound("dtwo/kill6.mp3")
-util.PrecacheSound("dtwo/kill7.mp3")
-util.PrecacheSound("dtwo/kill8.mp3")
+util.PrecacheSound("naisonji/jump.mp3")
+util.PrecacheSound("naisonji/panic.mp3")
+util.PrecacheSound("naisonji/pieceofcake.mp3")
 
 local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local dtwo_acquire_distance = CreateConVar("dtwo_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                                "The maximum distance at which dtwo will chase a target.")
+local naisonji_acquire_distance = CreateConVar("naisonji_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                                "The maximum distance at which naisonji will chase a target.")
 
-local dtwo_spawn_protect = CreateConVar("dtwo_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                             "If set to 1, dtwo will not target players or hide within 200 units of a spawn point.")
+local naisonji_spawn_protect = CreateConVar("naisonji_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                             "If set to 1, naisonji will not target players or hide within 200 units of a spawn point.")
 
-local dtwo_attack_distance = CreateConVar("dtwo_attack_distance", 80, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                               "The reach of dtwo's attack.")
+local naisonji_attack_distance = CreateConVar("naisonji_attack_distance", 80, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                               "The reach of naisonji's attack.")
 
-local dtwo_attack_interval = CreateConVar("dtwo_attack_interval", 0.2, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                               "The delay between dtwo's attacks.")
+local naisonji_attack_interval = CreateConVar("naisonji_attack_interval", 0.2, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                               "The delay between naisonji's attacks.")
 
-local dtwo_attack_force = CreateConVar("dtwo_attack_force", 800, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                            "The physical force of dtwo's attack. Higher values throw things farther.")
+local naisonji_attack_force = CreateConVar("naisonji_attack_force", 800, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                            "The physical force of naisonji's attack. Higher values throw things farther.")
 
-local dtwo_smash_props = CreateConVar("dtwo_smash_props", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                           "If set to 1, dtwo will punch through any props placed in their way.")
+local naisonji_smash_props = CreateConVar("naisonji_smash_props", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                           "If set to 1, naisonji will punch through any props placed in their way.")
 
-local dtwo_hiding_scan_interval = CreateConVar("dtwo_hiding_scan_interval", 3, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                                    "dtwo will only seek out hiding places every X seconds. This can be an expensive operation, so it is not " ..
-                                                    "recommended to lower this too much. However, if distant dtwos are not hiding from you quickly enough, " ..
+local naisonji_hiding_scan_interval = CreateConVar("naisonji_hiding_scan_interval", 3, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                                    "naisonji will only seek out hiding places every X seconds. This can be an expensive operation, so it is not " ..
+                                                    "recommended to lower this too much. However, if distant naisonjis are not hiding from you quickly enough, " ..
                                                     "you may consider lowering this a small amount.")
 
-local dtwo_hiding_repath_interval = CreateConVar("dtwo_hiding_repath_interval", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                                      "The path to dtwo's hiding spot will be redetermined every X seconds.")
+local naisonji_hiding_repath_interval = CreateConVar("naisonji_hiding_repath_interval", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                                      "The path to naisonji's hiding spot will be redetermined every X seconds.")
 
-local dtwo_chase_repath_interval = CreateConVar("dtwo_chase_repath_interval", 0.1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
-                                                     "The path to and position of dtwo's target will be redetermined every X seconds.")
+local naisonji_chase_repath_interval = CreateConVar("naisonji_chase_repath_interval", 0.1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+                                                     "The path to and position of naisonji's target will be redetermined every X seconds.")
 
-local dtwo_expensive_scan_interval = CreateConVar("dtwo_expensive_scan_interval", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local naisonji_expensive_scan_interval = CreateConVar("naisonji_expensive_scan_interval", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                        "Slightly expensive operations (distance calculations and entity searching) will occur every X seconds.")
 
-local dtwo_force_download = CreateConVar("dtwo_force_download", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE, FCVAR_ARCHIVE),
-                                              "If set to 1, clients will be forced to download dtwo resources (restart required after changing).\n" ..
-                                              "WARNING: If this is not set to 1, clients will not be able to see or hear dtwo!")
+local naisonji_force_download = CreateConVar("naisonji_force_download", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE, FCVAR_ARCHIVE),
+                                              "If set to 1, clients will be forced to download naisonji resources (restart required after changing).\n" ..
+                                              "WARNING: If this is not set to 1, clients will not be able to see or hear naisonji!")
 
  -- So we don't spam voice TOO much.
 local TAUNT_INTERVAL = 1.2
 local PATH_INFRACTION_LOCKOUT_TIME = 5
 
-if (dtwo_force_download:GetBool()) then
+if (naisonji_force_download:GetBool()) then
 	resource.AddWorkshop("174117071")
 end
 
-util.AddNetworkString("dtwo_nag")
-util.AddNetworkString("dtwo_nagresponse")
-util.AddNetworkString("dtwo_navgen")
+util.AddNetworkString("naisonji_nag")
+util.AddNetworkString("naisonji_nagresponse")
+util.AddNetworkString("naisonji_navgen")
 
 local trace = {
 	mask = MASK_SOLID_BRUSHONLY -- Pathfinding is only concerned with static geometry anyway.
@@ -106,10 +93,10 @@ local function isPositionExposed(pos)
 	return false
 end
 
-local VECTOR_dtwo_HEIGHT = Vector(0, 0, 96)
+local VECTOR_naisonji_HEIGHT = Vector(0, 0, 96)
 local function isPointSuitableForHiding(point)
 	trace.start = point
-	trace.endpos = point + VECTOR_dtwo_HEIGHT
+	trace.endpos = point + VECTOR_naisonji_HEIGHT
 	local tr = util.TraceLine(trace)
 
 	return (not tr.Hit)
@@ -151,7 +138,7 @@ local function buildHidingSpotCache()
 		end
 	end
 
-	print(string.format("dtwo: found %d suitable (%d unsuitable) hiding places in %d areas over %.2fms!", goodSpots, badSpots, #areas, (SysTime() - rStart) * 1000))
+	print(string.format("naisonji: found %d suitable (%d unsuitable) hiding places in %d areas over %.2fms!", goodSpots, badSpots, #areas, (SysTime() - rStart) * 1000))
 end
 
 local ai_ignoreplayers = GetConVar("ai_ignoreplayers")
@@ -165,24 +152,24 @@ local function isValidTarget(ent)
 		return ent:Alive()
 	end
 
-	-- Ignore dead NPCs, other dtwos, and dummy NPCs.
+	-- Ignore dead NPCs, other naisonjis, and dummy NPCs.
 	local class = ent:GetClass()
 	return (ent:IsNPC() and
 	        ent:Health() > 0 and
-	        class ~= "dtwo" and
+	        class ~= "naisonji" and
 	        not class:find("bullseye"))
 end
 
 --HACK!!! Because this is an issue a lot of people keep asking me about.
-hook.Add("PlayerSpawnedNPC", "dtwoMissingNavmeshNag", function(ply, ent)
+hook.Add("PlayerSpawnedNPC", "naisonjiMissingNavmeshNag", function(ply, ent)
 	if (not IsValid(ent)) then return end
-	if (ent:GetClass() ~= "dtwo") then return end
+	if (ent:GetClass() ~= "naisonji") then return end
 	if (navmesh.GetNavAreaCount() > 0) then return end
-	if (ply.dtwo_HasBeenNagged) then return end
-	ply.dtwo_HasBeenNagged = true
+	if (ply.naisonji_HasBeenNagged) then return end
+	ply.naisonji_HasBeenNagged = true
 
-	-- Try to explain why dtwo isn't working.
-	net.Start("dtwo_nag")
+	-- Try to explain why naisonji isn't working.
+	net.Start("naisonji_nag")
 	net.Send(ply)
 end)
 
@@ -191,15 +178,15 @@ local function navEndGenerate()
 	local timeElapsedStr = string.NiceTime(SysTime() - generateStart)
 
 	if (not navmesh.IsGenerating()) then
-		print("dtwo: Navmesh generation completed in " .. timeElapsedStr)
+		print("naisonji: Navmesh generation completed in " .. timeElapsedStr)
 	else
-		print("dtwo: Navmesh generation aborted after " .. timeElapsedStr)
+		print("naisonji: Navmesh generation aborted after " .. timeElapsedStr)
 	end
 end
 
-net.Receive("dtwo_nagresponse", function(len, ply)
+net.Receive("naisonji_nagresponse", function(len, ply)
 	if (net.ReadBit() == 0) then
-		ply.dtwo_HasBeenNagged = false
+		ply.naisonji_HasBeenNagged = false
 		return
 	end
 
@@ -207,7 +194,7 @@ net.Receive("dtwo_nagresponse", function(len, ply)
 
 	local spawnPoint = (GAMEMODE.SpawnPoints and GAMEMODE.SpawnPoints[1] or nil)
 	if (not IsValid(spawnPoint)) then
-		net.Start("dtwo_navgen")
+		net.Start("naisonji_navgen")
 			net.WriteBit(false)
 		net.Send(ply)
 
@@ -215,23 +202,23 @@ net.Receive("dtwo_nagresponse", function(len, ply)
 	end
 
 	---- The least we can do is ensure they don't have to listen to this noise.
-	--for _, dtwo in pairs(ents.FindByClass("dtwo")) do
-	--	dtwo:Remove()
+	--for _, naisonji in pairs(ents.FindByClass("naisonji")) do
+	--	naisonji:Remove()
 	--end
 
-	print("dtwo: Beginning nav_generate requested by " .. ply:Name())
+	print("naisonji: Beginning nav_generate requested by " .. ply:Name())
 
 	navmesh.SetPlayerSpawnName(spawnPoint:GetClass())
 	navmesh.BeginGeneration()
 
 	if (navmesh.IsGenerating()) then
 		generateStart = SysTime()
-		hook.Add("ShutDown", "dtwoNavGen", navEndGenerate)
+		hook.Add("ShutDown", "naisonjiNavGen", navEndGenerate)
 	else
-		print("dtwo: nav_generate failed to initialize")
+		print("naisonji: nav_generate failed to initialize")
 	end
 
-	net.Start("dtwo_navgen")
+	net.Start("naisonji_navgen")
 		net.WriteBit(navmesh.IsGenerating())
 	net.Send(ply)
 end)
@@ -301,7 +288,7 @@ function ENT:GetNearestTarget()
 	--local timeRoutine = SysTime()
 
 	-- Only target entities within the acquire distance.
-	local maxAcquireDist = dtwo_acquire_distance:GetInt()
+	local maxAcquireDist = naisonji_acquire_distance:GetInt()
 	local maxAcquireDistSqr = (maxAcquireDist * maxAcquireDist)
 	local myPos = self:GetPos()
 	local acquirableEntities = ents.FindInSphere(myPos, maxAcquireDist)
@@ -314,9 +301,9 @@ function ENT:GetNearestTarget()
 		-- Ignore invalid targets, of course.
 		if (not isValidTarget(ent)) then continue end
 
-		-- Spawn protection! Ignore players within 200 units of a spawn point if `dtwo_spawn_protect' = 1.
+		-- Spawn protection! Ignore players within 200 units of a spawn point if `naisonji_spawn_protect' = 1.
 		--TODO: Only for the first few seconds?
-		if (dtwo_spawn_protect:GetBool() and ent:IsPlayer() and isPointNearSpawn(ent:GetPos(), 200)) then
+		if (naisonji_spawn_protect:GetBool() and ent:IsPlayer() and isPointNearSpawn(ent:GetPos(), 200)) then
 			continue
 		end
 
@@ -355,7 +342,7 @@ function ENT:AttackNearbyTargets(radius)
 				if (IsValid(phys)) then
 					phys:Wake()
 					local hitOffset = vehicle:NearestPoint(hitSource)
-					phys:ApplyForceOffset(hitDirection * (dtwo_attack_force:GetInt() * phys:GetMass()), hitOffset)
+					phys:ApplyForceOffset(hitDirection * (naisonji_attack_force:GetInt() * phys:GetMass()), hitOffset)
 				end
 				vehicle:TakeDamage(math.max(1e8, ent:Health()), self, self)
 
@@ -366,16 +353,16 @@ function ENT:AttackNearbyTargets(radius)
 			end
 
 			local hitDirection = (ent:GetPos() - hitSource):GetNormal()
-			-- Give the player a good whack. dtwo means business.
+			-- Give the player a good whack. naisonji means business.
 			-- This is for those with god mode enabled.
-			ent:SetVelocity(hitDirection * dtwo_attack_force:GetInt() + vector_up * 500)
+			ent:SetVelocity(hitDirection * naisonji_attack_force:GetInt() + vector_up * 500)
 
 			local dmgInfo = DamageInfo()
 			dmgInfo:SetAttacker(self)
 			dmgInfo:SetInflictor(self)
 			dmgInfo:SetDamage(1e8)
 			dmgInfo:SetDamagePosition(self:GetPos())
-			dmgInfo:SetDamageForce((hitDirection * dtwo_attack_force:GetInt() + vector_up * 500) * 100)
+			dmgInfo:SetDamageForce((hitDirection * naisonji_attack_force:GetInt() + vector_up * 500) * 100)
 			ent:TakeDamageInfo(dmgInfo)
 			--ent:TakeDamage(math.max(1e8, ent:Health()), self, self)
 
@@ -384,7 +371,7 @@ function ENT:AttackNearbyTargets(radius)
 			-- Hits only count if we dealt some damage.
 			hit = (hit or (newHealth < health))
 		elseif (ent:GetMoveType() == MOVETYPE_VPHYSICS) then
-			if (not dtwo_smash_props:GetBool()) then continue end
+			if (not naisonji_smash_props:GetBool()) then continue end
 			if (ent:IsVehicle() and IsValid(ent:GetDriver())) then continue end
 
 			-- Knock away any props put in our path.
@@ -414,7 +401,7 @@ function ENT:AttackNearbyTargets(radius)
 				local phys = ent:GetPhysicsObjectNum(id)
 				if (IsValid(phys)) then
 					phys:EnableMotion(true)
-					phys:ApplyForceOffset(hitDirection * (dtwo_attack_force:GetInt() * mass), hitOffset)
+					phys:ApplyForceOffset(hitDirection * (naisonji_attack_force:GetInt() * mass), hitOffset)
 				end
 			end
 
@@ -493,19 +480,9 @@ end
 function ENT:AttemptJumpAtTarget()
 	if (not self:IsOnGround()) then return end
 
-	local hrur = {
-		"dtwo/jump.mp3",
-		"dtwo/jump2.mp3",
-		"dtwo/jump3.mp3",
-		"dtwo/jump4.mp3",
-		"dtwo/jump5.mp3",
-		"dtwo/jump6.mp3",
-		"dtwo/jump7.mp3"
-	}
-
 	local xyDistSqr = (self.CurrentTarget:GetPos() - self:GetPos()):Length2DSqr()
 	local zDifference = self.CurrentTarget:GetPos().z - self:GetPos().z
-	local maxAttackDistance = dtwo_attack_distance:GetInt()
+	local maxAttackDistance = naisonji_attack_distance:GetInt()
 	if (xyDistSqr <= math.pow(maxAttackDistance + 200, 2) and zDifference >= maxAttackDistance) then
 		--TODO: Set up jump so target lands on parabola.
 		local jumpHeight = zDifference + 50
@@ -513,7 +490,7 @@ function ENT:AttemptJumpAtTarget()
 		self.loco:Jump()
 		self.loco:SetJumpHeight(300)
 
-		self:EmitSound((jumpHeight > 500 and table.Random(hrur) or table.Random(hrur)), 350, 100)
+		self:EmitSound((jumpHeight > 500 and "naisonji/jump.mp3" or "naisonji/jump.mp3"), 350, 100)
 	end
 end
 
@@ -556,14 +533,7 @@ function ENT:BehaveStart()
 end
 
 local tauntSounds = {
-	"dtwo/kill1.mp3",
-	"dtwo/kill2.mp3",
-	"dtwo/kill3.mp3",
-	"dtwo/kill4.mp3",
-	"dtwo/kill5.mp3",
-	"dtwo/kill6.mp3",
-	"dtwo/kill7.mp3",
-	"dtwo/kill8.mp3"
+	"naisonji/pieceofcake.mp3"
 }
 local ai_disabled = GetConVar("ai_disabled")
 --local timeAll = 0
@@ -577,7 +547,7 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 	local currentTime = CurTime()
 	--local timeRoutine = SysTime()
 
-	if (currentTime - self.LastTargetSearch > dtwo_expensive_scan_interval:GetFloat()) then
+	if (currentTime - self.LastTargetSearch > naisonji_expensive_scan_interval:GetFloat()) then
 		local target = self:GetNearestTarget()
 
 		if (target ~= self.CurrentTarget) then
@@ -595,8 +565,8 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 		self.LastHidingPlaceScan = 0
 
 		-- Attack anyone nearby while we're rampaging.
-		if (currentTime - self.LastAttack > dtwo_attack_interval:GetFloat()) then
-			if (self:AttackNearbyTargets(dtwo_attack_distance:GetInt())) then
+		if (currentTime - self.LastAttack > naisonji_attack_interval:GetFloat()) then
+			if (self:AttackNearbyTargets(naisonji_attack_distance:GetInt())) then
 				if (currentTime - self.LastTaunt > TAUNT_INTERVAL) then
 					self.LastTaunt = currentTime
 					self:EmitSound(table.Random(tauntSounds), 350, 100)
@@ -610,7 +580,7 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 		end
 
 		-- Recompute the path to the target every so often.
-		if (currentTime - self.LastPathRecompute > dtwo_chase_repath_interval:GetFloat()) then
+		if (currentTime - self.LastPathRecompute > naisonji_chase_repath_interval:GetFloat()) then
 			self.LastPathRecompute = currentTime
 			self:RecomputeTargetPath()
 		end
@@ -620,13 +590,13 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 
 		-- Try to jump at a target in the air.
 		if (self:IsOnGround()) then
-			if (currentTime - self.LastJumpScan >= dtwo_expensive_scan_interval:GetFloat()) then
+			if (currentTime - self.LastJumpScan >= naisonji_expensive_scan_interval:GetFloat()) then
 				self:AttemptJumpAtTarget()
 				self.LastJumpScan = currentTime
 			end
 		end
 	else
-		if (currentTime - self.LastHidingPlaceScan >= dtwo_hiding_scan_interval:GetFloat()) then
+		if (currentTime - self.LastHidingPlaceScan >= naisonji_hiding_scan_interval:GetFloat()) then
 			self.LastHidingPlaceScan = currentTime
 
 			-- Grab a new hiding spot.
@@ -635,7 +605,7 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 		end
 
 		if (self.HidingSpot ~= nil) then
-			if (currentTime - self.LastPathRecompute >= dtwo_hiding_repath_interval:GetFloat()) then
+			if (currentTime - self.LastPathRecompute >= naisonji_hiding_repath_interval:GetFloat()) then
 				self.LastPathRecompute = currentTime
 				self.MovePath:Compute(self, self.HidingSpot.pos)
 			end
@@ -646,7 +616,7 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 	end
 
 	-- Don't even wait until the STUCK flag is set for this. It's much more fluid this way.
-	if (currentTime - self.LastCeilingUnstick >= dtwo_expensive_scan_interval:GetFloat()) then
+	if (currentTime - self.LastCeilingUnstick >= naisonji_expensive_scan_interval:GetFloat()) then
 		self:UnstickFromCeiling()
 
 		self.LastCeilingUnstick = currentTime
@@ -664,23 +634,23 @@ function ENT:BehaveUpdate() --TODO: Split this up more. Eww.
 end
 
 --[[local lastFrame = 0
-local dtwosLastFrame = 0
-hook.Add("Tick", "dtwoBenchmark", function()
+local naisonjisLastFrame = 0
+hook.Add("Tick", "naisonjiBenchmark", function()
 	local now = SysTime()
-	local numdtwos = #ents.FindByClass("dtwo")
+	local numnaisonjis = #ents.FindByClass("naisonji")
 
 	if (timeAll ~= 0) then
 
-		local dtwoTime = timeAll * 1000
+		local naisonjiTime = timeAll * 1000
 		local frameTime = (now - lastFrame) * 1000
 		print(string.format("RunBehaviour() avg %.2fms total %.2fms (%.2fms frame, ratio %.2f%%) (%d exist, %d thinking (%.2f%%))",
-		                    dtwoTime / dtwosLastFrame, dtwoTime, frameTime, (dtwoTime / frameTime) * 100, dtwosLastFrame, numThink, (numThink / dtwosLastFrame) * 100))
+		                    naisonjiTime / naisonjisLastFrame, naisonjiTime, frameTime, (naisonjiTime / frameTime) * 100, naisonjisLastFrame, numThink, (numThink / naisonjisLastFrame) * 100))
 		timeAll = 0
 		numThink = 0
 	end
 
 	lastFrame = now
-	dtwosLastFrame = numdtwos
+	naisonjisLastFrame = numnaisonjis
 end)]]
 
 ENT.LastStuck = 0
@@ -717,108 +687,108 @@ end
 
 else -- CLIENT --
 
-killicon.Add("dtwo", "dtwo/dtwo_killicon", color_white)
-language.Add("dtwo", "D22")
+killicon.Add("naisonji", "naisonji/naisonji_killicon", color_white)
+language.Add("naisonji", "naisonji")
 
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
 local developer = GetConVar("developer")
 local function DevPrint(devLevel, msg)
 	if (developer:GetInt() >= devLevel) then
-		print("dtwo: " .. msg)
+		print("naisonji: " .. msg)
 	end
 end
 
-local dtwoMusic = nil
-local lastPanic = 0 -- The last time we were in music range of a dtwo.
+local naisonjiMusic = nil
+local lastPanic = 0 -- The last time we were in music range of a naisonji.
 
 --TODO: Why don't these flags show up? Bug? Documentation would be lovely.
-local dtwo_music_volume = CreateConVar("dtwo_music_volume", 1, bit.bor(FCVAR_CLIENTDLL, FCVAR_DEMO, FCVAR_ARCHIVE),
-                                            "Maximum music volume when being chased by dtwo. (0-1, where 0 is muted)")
+local naisonji_music_volume = CreateConVar("naisonji_music_volume", 1, bit.bor(FCVAR_CLIENTDLL, FCVAR_DEMO, FCVAR_ARCHIVE),
+                                            "Maximum music volume when being chased by naisonji. (0-1, where 0 is muted)")
 
-local MUSIC_RESTART_DELAY = 2 -- If another dtwo comes in range before this delay is up, the music will continue where it left off.
+local MUSIC_RESTART_DELAY = 2 -- If another naisonji comes in range before this delay is up, the music will continue where it left off.
 
-local MUSIC_CUTOFF_DISTANCE   = 1000 -- Beyond this distance, dtwos do not count to music volume.
-local MUSIC_PANIC_DISTANCE    = 200 -- Max volume is achieved when MUSIC_dtwo_PANIC_COUNT dtwos are this close, or an equivalent score.
-local MUSIC_dtwo_PANIC_COUNT = 8 -- That's a lot of dtwo.
+local MUSIC_CUTOFF_DISTANCE   = 1000 -- Beyond this distance, naisonjis do not count to music volume.
+local MUSIC_PANIC_DISTANCE    = 200 -- Max volume is achieved when MUSIC_naisonji_PANIC_COUNT naisonjis are this close, or an equivalent score.
+local MUSIC_naisonji_PANIC_COUNT = 8 -- That's a lot of naisonji.
 
-local MUSIC_dtwo_MAX_DISTANCE_SCORE = (MUSIC_CUTOFF_DISTANCE - MUSIC_PANIC_DISTANCE) * MUSIC_dtwo_PANIC_COUNT
+local MUSIC_naisonji_MAX_DISTANCE_SCORE = (MUSIC_CUTOFF_DISTANCE - MUSIC_PANIC_DISTANCE) * MUSIC_naisonji_PANIC_COUNT
 
 local function updatePanicMusic()
-	if (#ents.FindByClass("dtwo") == 0) then
+	if (#ents.FindByClass("naisonji") == 0) then
 		-- Whoops. No need to run for now.
 		DevPrint(4, "Halting music timer.")
-		timer.Remove("dtwodtwoMusicUpdate")
+		timer.Remove("naisonjinaisonjiMusicUpdate")
 
-		if (dtwoMusic ~= nil) then
-			dtwoMusic:Stop()
+		if (naisonjiMusic ~= nil) then
+			naisonjiMusic:Stop()
 		end
 
 		return
 	end
 
-	if (dtwoMusic == nil) then
+	if (naisonjiMusic == nil) then
 		if (IsValid(LocalPlayer())) then
-			dtwoMusic = CreateSound(LocalPlayer(), "dtwo/panic.mp3")
-			dtwoMusic:Stop()
+			naisonjiMusic = CreateSound(LocalPlayer(), "naisonji/panic.mp3")
+			naisonjiMusic:Stop()
 		else
 			return -- No LocalPlayer yet!
 		end
 	end
 
-	if (dtwo_music_volume:GetFloat() <= 0 or not IsValid(LocalPlayer())) then
-		dtwoMusic:Stop()
+	if (naisonji_music_volume:GetFloat() <= 0 or not IsValid(LocalPlayer())) then
+		naisonjiMusic:Stop()
 		return
 	end
 
 	local totalDistanceScore = 0
 	local nearEntities = ents.FindInSphere(LocalPlayer():GetPos(), 1000)
 	for _, ent in pairs(nearEntities) do
-		if (IsValid(ent) and ent:GetClass() == "dtwo") then
+		if (IsValid(ent) and ent:GetClass() == "naisonji") then
 			local distanceScore = math.max(0, MUSIC_CUTOFF_DISTANCE - LocalPlayer():GetPos():Distance(ent:GetPos()))
 			totalDistanceScore = totalDistanceScore + distanceScore
 		end
 	end
 
-	local musicVolume = math.min(1, totalDistanceScore / MUSIC_dtwo_MAX_DISTANCE_SCORE)
+	local musicVolume = math.min(1, totalDistanceScore / MUSIC_naisonji_MAX_DISTANCE_SCORE)
 
 	local shouldRestartMusic = (CurTime() - lastPanic >= MUSIC_RESTART_DELAY)
 	if (musicVolume > 0) then
 		if (shouldRestartMusic) then
-			dtwoMusic:Play()
+			naisonjiMusic:Play()
 		end
 
 		if (not LocalPlayer():Alive()) then
-			-- Quiet down so we can hear dtwo taunt us.
+			-- Quiet down so we can hear naisonji taunt us.
 			musicVolume = musicVolume / 4
 		end
 
 		lastPanic = CurTime()
 	elseif (shouldRestartMusic) then
-		dtwoMusic:Stop()
+		naisonjiMusic:Stop()
 		return
 	else
 		musicVolume = 0
 	end
 
-	musicVolume = math.max(0.01, musicVolume * math.Clamp(dtwo_music_volume:GetFloat(), 0, 1))
+	musicVolume = math.max(0.01, musicVolume * math.Clamp(naisonji_music_volume:GetFloat(), 0, 1))
 
-	dtwoMusic:Play()
-	dtwoMusic:ChangePitch(math.Clamp(game.GetTimeScale() * 100, 50, 255), 0) -- Just for kicks.
-	dtwoMusic:ChangeVolume(musicVolume, 0)
+	naisonjiMusic:Play()
+	naisonjiMusic:ChangePitch(math.Clamp(game.GetTimeScale() * 100, 50, 255), 0) -- Just for kicks.
+	naisonjiMusic:ChangeVolume(musicVolume, 0)
 end
 
 local function startTimer()
-	if (not timer.Exists("dtwodtwoMusicUpdate")) then
-		timer.Create("dtwodtwoMusicUpdate", 0.05, 0, updatePanicMusic)
+	if (not timer.Exists("naisonjinaisonjiMusicUpdate")) then
+		timer.Create("naisonjinaisonjiMusicUpdate", 0.05, 0, updatePanicMusic)
 		DevPrint(4, "Beginning music timer.")
 	end
 end
 
-local dtwoMaterial = Material("dtwo/dtwo.png", "smooth mips")
+local naisonjiMaterial = Material("naisonji/naisonji.png", "smooth mips")
 local drawOffset = Vector(0, 0, 64)
 function ENT:RenderOverride()
-	render.SetMaterial(dtwoMaterial)
+	render.SetMaterial(naisonjiMaterial)
 	render.DrawSprite(self:GetPos() + drawOffset, 128, 128)
 end
 
@@ -828,29 +798,29 @@ end
 
 -- Here begins ugly hacky code because AIs don't have a clientside SEnt part. (WHY NOT????) ---
 
-hook.Add("OnEntityCreated", "dtwoInitialize", function(ent)
+hook.Add("OnEntityCreated", "naisonjiInitialize", function(ent)
 	if (not IsValid(ent)) then return end
-	if (ent:GetClass() ~= "dtwo") then return end
+	if (ent:GetClass() ~= "naisonji") then return end
 
-	local dtwoEntTable = scripted_ents.GetStored("dtwo")
+	local naisonjiEntTable = scripted_ents.GetStored("naisonji")
 
-	table.Merge(ent, dtwoEntTable.t) --HACK!!! Because this isn't done for us.
-	ent:CallOnRemove("dtwo_removed", dtwoDeregister)
+	table.Merge(ent, naisonjiEntTable.t) --HACK!!! Because this isn't done for us.
+	ent:CallOnRemove("naisonji_removed", naisonjiDeregister)
 end)
 
-hook.Add("NetworkEntityCreated", "dtwoNetInit", function(ent)
+hook.Add("NetworkEntityCreated", "naisonjiNetInit", function(ent)
 	if (not IsValid(ent)) then return end
-	if (ent:GetClass() ~= "dtwo") then return end
+	if (ent:GetClass() ~= "naisonji") then return end
 
 	startTimer()
 end)
 
-surface.CreateFont("dtwoHUD", {
+surface.CreateFont("naisonjiHUD", {
 	font = "Arial",
 	size = 56
 })
 
-surface.CreateFont("dtwoHUDSmall", {
+surface.CreateFont("naisonjiHUDSmall", {
 	font = "Arial",
 	size = 24
 })
@@ -895,13 +865,13 @@ local flavourText = ""
 local lastBracket = 0
 local generateStart = 0
 local function navGenerateHUDOverlay()
-	draw.SimpleTextOutlined("dtwo is studying this map.", "dtwoHUD", ScrW() / 2, ScrH() / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, color_black)
-	draw.SimpleTextOutlined("Please wait...", "dtwoHUD", ScrW() / 2, ScrH() / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 2, color_black)
+	draw.SimpleTextOutlined("naisonji is studying this map.", "naisonjiHUD", ScrW() / 2, ScrH() / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, color_black)
+	draw.SimpleTextOutlined("Please wait...", "naisonjiHUD", ScrW() / 2, ScrH() / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 2, color_black)
 
 	local elapsed = (SysTime() - generateStart)
 	local elapsedStr = string_ToHMS(elapsed)
-	draw.SimpleTextOutlined("Time Elapsed:", "dtwoHUDSmall", ScrW() / 2, ScrH() * 3/4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
-	draw.SimpleTextOutlined(elapsedStr, "dtwoHUDSmall", ScrW() / 2, ScrH() * 3/4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
+	draw.SimpleTextOutlined("Time Elapsed:", "naisonjiHUDSmall", ScrW() / 2, ScrH() * 3/4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, color_black)
+	draw.SimpleTextOutlined(elapsedStr, "naisonjiHUDSmall", ScrW() / 2, ScrH() * 3/4, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, 1, color_black)
 
 	-- It's taking a while.
 	local textBracket = math.floor(elapsed / SECONDS_PER_BRACKET) + 1
@@ -909,35 +879,35 @@ local function navGenerateHUDOverlay()
 		flavourText = table.Random(flavourTexts[math.min(5, textBracket)])
 		lastBracket = textBracket
 	end
-	draw.SimpleTextOutlined(flavourText, "dtwoHUDSmall", ScrW() / 2, ScrH() * 4/5, color_yellow, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+	draw.SimpleTextOutlined(flavourText, "naisonjiHUDSmall", ScrW() / 2, ScrH() * 4/5, color_yellow, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
 end
 
-net.Receive("dtwo_navgen", function()
+net.Receive("naisonji_navgen", function()
 	if (net.ReadBit() == 1) then
 		generateStart = SysTime()
 		lastBracket = 0
-		hook.Add("HUDPaint", "dtwoNavGenOverlay", navGenerateHUDOverlay)
+		hook.Add("HUDPaint", "naisonjiNavGenOverlay", navGenerateHUDOverlay)
 	else
-		Derma_Message([[Oh no. dtwo doesn't even know where to start with this map.
+		Derma_Message([[Oh no. naisonji doesn't even know where to start with this map.
 If you're not running the Sandbox gamemode, switch to that and try again.]],
 		              "Error!")
 	end
 end)
 
 local function navGenerate()
-	net.Start("dtwo_nagresponse")
+	net.Start("naisonji_nagresponse")
 		net.WriteBit(true)
 	net.SendToServer()
 end
 
 local function nagAgain()
-	net.Start("dtwo_nagresponse")
+	net.Start("naisonji_nagresponse")
 		net.WriteBit(false)
 	net.SendToServer()
 end
 
 local function navWarning()
-	Derma_Query([[It will take a while for dtwo to figure this map out.
+	Derma_Query([[It will take a while for naisonji to figure this map out.
 While he's studying it, you won't be able to play,
 and the game will run very slowly, because he doesn't like you.
 
@@ -949,20 +919,20 @@ Anything you have placed will be deleted.]],
 end
 
 -- Lazy
-net.Receive("dtwo_nag", function()
+net.Receive("naisonji_nag", function()
 	if (game.SinglePlayer()) then
-		Derma_Query([[Uh oh! dtwo doesn't know this map.
-Would you like dtwo to learn it?]],
-		            "This map is currently not dtwo-compatible!",
+		Derma_Query([[Uh oh! naisonji doesn't know this map.
+Would you like naisonji to learn it?]],
+		            "This map is currently not naisonji-compatible!",
 		            "Yes", navWarning,
 		            "No", nagAgain,
 		            "No. Do not ask again.")
 	else
-		Derma_Query([[Uh oh! dtwo doesn't know this map. He won't be able to move!
+		Derma_Query([[Uh oh! naisonji doesn't know this map. He won't be able to move!
 Because you're not in a single-player game, he isn't able to learn it.
 
-Ask the server host about teaching this map to dtwo.]],
-		            "This map is currently not dtwo-compatible!",
+Ask the server host about teaching this map to naisonji.]],
+		            "This map is currently not naisonji-compatible!",
 		            "Ok", nagAgain,
 		            "Ok. Don't say this again.")
 	end
@@ -973,9 +943,9 @@ end
 --
 -- List the NPC as spawnable.
 --
-list.Set("NPC", "dtwo", {
-	Name = "D22",
-	Class = "dtwo",
+list.Set("NPC", "naisonji", {
+	Name = "Naisonji",
+	Class = "naisonji",
 	Category = "EQQ BANG",
 	AdminOnly = false
 })

@@ -14,7 +14,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local fatbob_acquire_distance = CreateConVar("fatbob_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local fatbob_acquire_distance = CreateConVar("fatbob_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which fatbob will chase a target.")
 
 local fatbob_spawn_protect = CreateConVar("fatbob_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -946,6 +946,6 @@ end
 list.Set("NPC", "fatbob", {
 	Name = "Fat Bob",
 	Class = "fatbob",
-	Category = "Imba Nextbots",
+	Category = "Funny Nextbots",
 	AdminOnly = false
 })

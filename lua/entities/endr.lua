@@ -16,7 +16,7 @@ local IsValid = IsValid
 
 if SERVER then -- SERVER --
 
-local endr_acquire_distance = CreateConVar("endr_acquire_distance", 2500, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
+local endr_acquire_distance = CreateConVar("endr_acquire_distance", 999999999, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
                                                 "The maximum distance at which endr will chase a target.")
 
 local endr_spawn_protect = CreateConVar("endr_spawn_protect", 1, bit.bor(FCVAR_GAMEDLL, FCVAR_DEMO, FCVAR_SERVER_CAN_EXECUTE),
@@ -949,6 +949,6 @@ end
 list.Set("NPC", "endr", {
 	Name = "Endr Port",
 	Class = "endr",
-	Category = "Imba Nextbots",
+	Category = "EQQ BANG",
 	AdminOnly = false
 })
