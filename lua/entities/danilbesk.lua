@@ -489,7 +489,7 @@ function ENT:AttemptJumpAtTarget()
 		self.loco:Jump()
 		self.loco:SetJumpHeight(300)
 
-		self:EmitSound((jumpHeight > 500 and "" or ""), 350, 100)
+		self:EmitSound((jumpHeight > 500 and "danilbesk/jump.mp3" or "danilbesk/jump.mp3"), 350, 100)
 	end
 end
 
