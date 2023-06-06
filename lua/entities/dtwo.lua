@@ -22,6 +22,7 @@ util.PrecacheSound("dtwo/kill5.mp3")
 util.PrecacheSound("dtwo/kill6.mp3")
 util.PrecacheSound("dtwo/kill7.mp3")
 util.PrecacheSound("dtwo/kill8.mp3")
+util.PrecacheSound("dtwo/killSPECIAL1.mp3")
 
 local IsValid = IsValid
 
@@ -563,7 +564,8 @@ local tauntSounds = {
 	"dtwo/kill5.mp3",
 	"dtwo/kill6.mp3",
 	"dtwo/kill7.mp3",
-	"dtwo/kill8.mp3"
+	"dtwo/kill8.mp3",
+	"dtwo/killSPECIAL1.mp3"
 }
 local ai_disabled = GetConVar("ai_disabled")
 --local timeAll = 0
@@ -718,7 +720,7 @@ end
 else -- CLIENT --
 
 killicon.Add("dtwo", "dtwo/dtwo_killicon", color_white)
-language.Add("dtwo", "D22")
+language.Add("dtwo", "D_TWO_TWO")
 
 ENT.RenderGroup = RENDERGROUP_TRANSLUCENT
 
@@ -974,7 +976,7 @@ end
 -- List the NPC as spawnable.
 --
 list.Set("NPC", "dtwo", {
-	Name = "D22",
+	Name = "D_TWO_TWO",
 	Class = "dtwo",
 	Category = "EQQ BANG",
 	AdminOnly = false
