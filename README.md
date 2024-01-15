@@ -1,1 +1,1 @@
-# Если пиратка то перекиньте по расположению вашего гарриса в папку garrysmod/addons
+# garrysmod/addons if game is not licenced
